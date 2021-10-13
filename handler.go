@@ -42,3 +42,8 @@ func PutKeyHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
+
+func FlushHandler(w http.ResponseWriter, r *http.Request) {
+	store := Store()
+	store.DeleteAll()
+}

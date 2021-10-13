@@ -12,9 +12,11 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-
 	mux.HandleFunc("/", HttpHandler)
+	mux.HandleFunc("/flush", FlushHandler)
 	handler := Logging(mux)
+
+	Store()
 
 	http.ListenAndServe(":"+port, handler)
 }
