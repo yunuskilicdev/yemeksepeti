@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"sync"
 	"time"
 )
@@ -52,6 +53,7 @@ func Store() *InMemoryKV {
 func (inMemory *InMemoryKV) backgroundTask() {
 	ticker := time.NewTicker(1 * time.Minute)
 	for _ = range ticker.C {
+		fmt.Println("PERSIST")
 		store.persist()
 	}
 }
