@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/yunuskilicdev/yemeksepeti/service"
 )
 
 func HttpHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +25,7 @@ func GetKeyHandler(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	queryKeyParam := queryParams["key"]
 	k := queryKeyParam[0]
-	store := Store()
+	store := service.Store()
 	v := store.Get(k)
 	if err := json.NewEncoder(w).Encode(v); err != nil {
 		panic(err)
@@ -36,7 +38,7 @@ func PutKeyHandler(w http.ResponseWriter, r *http.Request) {
 	k := queryKeyParam[0]
 	queryValueParam := queryParams["value"]
 	v := queryValueParam[0]
-	store := Store()
+	store := service.Store()
 	store.Put(k, v)
 	if err := json.NewEncoder(w).Encode(v); err != nil {
 		panic(err)
@@ -44,6 +46,6 @@ func PutKeyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func FlushHandler(w http.ResponseWriter, r *http.Request) {
-	store := Store()
+	store := service.Store()
 	store.DeleteAll()
 }

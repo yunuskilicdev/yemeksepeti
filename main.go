@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 	"os"
+
+	"github.com/yunuskilicdev/yemeksepeti/service"
 )
 
 func main() {
@@ -16,7 +18,7 @@ func main() {
 	mux.HandleFunc("/flush", FlushHandler)
 	handler := Logging(mux)
 
-	Store()
+	service.Store()
 
 	http.ListenAndServe(":"+port, handler)
 }

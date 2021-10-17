@@ -1,10 +1,11 @@
-package main
+package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"sync"
 	"time"
+
+	"github.com/yunuskilicdev/yemeksepeti/util"
 )
 
 type InMemoryKV struct {
@@ -27,14 +28,15 @@ func (inMemory *InMemoryKV) Put(key string, value string) {
 func (inMemory *InMemoryKV) DeleteAll() {
 	inMemory.Lock()
 	defer inMemory.Unlock()
-	deleteAllFiles()
+	store.data = make(map[string]string)
+	util.DeleteAllFiles()
 }
 
 func (inMemory *InMemoryKV) persist() {
 	inMemory.Lock()
 	defer inMemory.Unlock()
 	jsonStr, _ := json.Marshal(store.data)
-	createFile(jsonStr)
+	util.CreateFile(jsonStr)
 }
 
 func Store() *InMemoryKV {
@@ -42,8 +44,8 @@ func Store() *InMemoryKV {
 		return store
 	}
 	store = &InMemoryKV{data: map[string]string{}}
-	initializeBasePath()
-	readJsonFromFile(&store.data)
+	util.InitializeBasePath()
+	util.ReadJsonFromFile(&store.data)
 
 	go store.backgroundTask()
 
@@ -53,7 +55,6 @@ func Store() *InMemoryKV {
 func (inMemory *InMemoryKV) backgroundTask() {
 	ticker := time.NewTicker(1 * time.Minute)
 	for _ = range ticker.C {
-		fmt.Println("PERSIST")
 		store.persist()
 	}
 }
